@@ -8,9 +8,12 @@ const abecedarioAcentos = [...abecedario, "á", "é", "í", "ó", "ú"]
 
 //Objeto de Arrays  de Palabras por Nivel
 const palabras = {
-palabrasFacil: ["andar", "barra"],
-palabrasNormal: ["bonos", "bajar"],
-palabrasDificil: ["avaro", "arnés"]
+palabrasFacil: ["abrir", "barra", "perro", "carne", "pollo", "gallo", "koala", "parto", "corto", "zombi", 
+"yerba", "vivir", "verde", "tabla", "truco", "termo", "terco", "techo"],
+palabrasNormal: ["bonos", "bajar", "palco", "andar", "alzar", "karma", "otoño", "señas", "zumba", "yelmo", 
+"vodka", "veloz", "usual", "tumor", "trono", "toser", "toldo", "tango"],
+palabrasDificil: ["avaro", "arnés", "anexo", "kebab", "éxito", "añejo", "riñón", "zanco", "yacer", "xenón", 
+"voraz", "veraz", "útero", "unión", "torva", "torno", "tenaz", "tapir"]
 }
 
 //Desestructuracion del objeto para facil uso de sus arrays
