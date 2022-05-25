@@ -2,20 +2,63 @@
 const abecedario = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", 
 "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-//Array Abecedario con Acentos para Nivel Dificil (Implementación de ...Spread)
-const abecedarioAcentos = [...abecedario, "á", "é", "í", "ó", "ú"]
+//Array para palabras dentro de la API DIC
+palabraDic = []
+
+//Funcion API 
+const apiDic = async (palabra, palabraDic) => {
+
+    //Pedido a la API
+    const resp = await
+    fetch(`https://www.dictionaryapi.com/api/v3/references/spanish/json/${palabra}?key=d56352af-43d9-4103-8d34-eb838adb8fa9`);
+    const data = await resp.json();
+
+    //Obtengo solo la palabra
+    if (data[30] == undefined) {
+        respuesta = data[0].hwi.hw;
+    }
+
+    else {
+        respuesta = "noExiste";
+    }
+
+    //Pusheo la palabra a mi array
+    palabraDic.push(respuesta)
+
+    
+};
+
 
 
 //Objeto de Arrays  de Palabras por Nivel
 const palabras = {
-palabrasFacil: ["abrir", "barra", "perro", "carne", "pollo", "gallo", "koala", "parto", "corto", "zombi", 
-"yerba", "vivir", "verde", "tabla", "truco", "termo", "terco", "techo"],
-palabrasNormal: ["bonos", "bajar", "palco", "andar", "alzar", "karma", "otoño", "señas", "zumba", "yelmo", 
-"vodka", "veloz", "usual", "tumor", "trono", "toser", "toldo", "tango"],
-palabrasDificil: ["avaro", "arnés", "anexo", "kebab", "éxito", "añejo", "riñón", "zanco", "yacer", "xenón", 
-"voraz", "veraz", "útero", "unión", "torva", "torno", "tenaz", "tapir"]
-}
-
+    palabrasFacil: ["abrir", "barra", "perro", "carne", "pollo", "gallo", "koala", "parto", "corto", "zombi", 
+    "yerba", "vivir", "verde", "villa", "viejo", "tabla", "truco", "termo", "terco", "techo", "tango", "torta", 
+    "tenis", "tecla", "sumar", "silla", "sucio", "suave", "socio", "sobre", "selva", "racha", "radio", "rampa",
+    "recto", "regla", "reina", "reino", "queso", "padre", "pasto", "pasta", "patio", "peine", "piano", "pieza",
+    "oveja", "oxido", "nafta", "nariz", "nieto", "nieve", "noche", "macho", "madre", "mando", "marco", "metro",
+    "labio", "larga", "leche", "lento", "letra", "lindo", "jarra", "joven", "juego", "impar", "igual", "hongo",
+    "hacha", "ganar", "genio", "gente", "falso", "feliz", "feria", "ficha", "enano", "etapa", "danza", "droga",
+    "ducha", "dulce", "cable", "calor", "campo"],
+    palabrasNormal: ["bonos", "bajar", "palco", "andar", "alzar", "karma", "otoño", "señal", "zumba", "yelmo", 
+    "vodka", "veloz", "verso", "verbo", "usual", "tumor", "trono", "toser", "tutor", "toldo", "tropa", "tosco", 
+    "tieso", "tenso", "tejer", "sushi", "sutil", "sueño", "subir", "sitio", "siglo", "serie", "rabia", "risco",
+    "rasgo", "regio", "retro", "ritmo", "robar", "queja", "pagar", "palta", "pañal", "panel", "pelea", "peste",
+    "oliva", "opaco", "ocaso", "ozono", "naipe", "nicho", "ninja", "mafia", "magma", "mamut", "marca", "marea",
+    "lapso", "larva", "legal", "letal", "licor", "lince", "jerga", "jueza", "jugar", "iluso", "ileso", "hacer",
+    "harto", "gaita", "gesto", "girar", "farol", "fatal", "feroz", "fibra", "echar", "errar", "dañar", "dardo",
+    "duelo", "dueño", "cacao", "calvo", "canoa"],
+    palabrasDificil: ["avaro", "arnés", "anexo", "kebab", "éxito", "aliño", "añejo", "riñón", "zanco", "yacer", 
+    "xenón", "voraz", "veraz", "vóley", "vídeo", "útero", "usaje", "unión", "torva", "torno", "tucán", "tenaz", 
+    "tapir", "tamal", "sazón", "suite", "suero", "suela", "soplo", "sonda", "solar", "sikus", "sesgo", "rapel",
+    "razón", "relax", "rocío", "rodeo", "quena", "pádel", "pauta", "peaje", "pelón", "pixel", "podar", "polen",
+    "oasis", "ovino", "omega", "ñandú", "nasal", "navío", "nitro", "macro", "micro", "malta", "matiz", "móvil",
+    "labor", "lápiz", "liceo", "lijar", "limón", "lirio", "jalea", "jerez", "jeque", "ícono", "istmo", "héroe",
+    "hedor", "geoda", "grumo", "gruta", "facto", "fauna", "fémur", "fénix", "élite", "eluir", "dakar", "debut",
+    "dupla", "caché", "cajón", "caspa", "ceder"]
+    }
+ 
+    
 //Desestructuracion del objeto para facil uso de sus arrays
 const {palabrasFacil, palabrasNormal, palabrasDificil} = palabras 
 
@@ -50,54 +93,56 @@ function agregarAlocalStorage (situacion) {
 }
 
 //Palabra Valida
-function corroborarPalabra(ingresoUsuario, nivel) {
+function corroborarPalabra(ingresoUsuario, nivel, palabraDic) {
 
     //Array letras validas y obtengo <p>error<p>
     let letrasValidas = [];
     let textoError = document.getElementById("error");
 
-    if (ingresoUsuario.length == 5) {
-        for (l of ingresoUsuario) {
+    //Corroborar si palabra dentro de diccionario
+    if (palabraDic.includes(ingresoUsuario) || palabrasFacil.includes(ingresoUsuario) || palabrasNormal.includes(ingresoUsuario) || palabrasDificil.includes(ingresoUsuario)) {
+        //Iteracion por letra y PUSH
+        if (ingresoUsuario.length == 5) {
+            for (l of ingresoUsuario) {
 
-            //Nivel Dificil con Acentos
-            if (nivel == "dificil") {
-            
-                if ((abecedarioAcentos.includes(l)) == false) {
-                    //Letra fuera del Abecedario
-                    textoError.innerHTML = `<font color="red"> <p id="error" >Un caracter introducido no forma parte del abecedario.</p><br>`;
-                    break;
+                //Nivel Dificil con Acentos
+                if (nivel == "dificil") {
+
+                 letrasValidas.push(l);
+
                 }
 
+                //Nivel Facil o Normal
                 else {
-                    //Se añade cada letra Valida al array
-                    letrasValidas.push(l);
-                }
+
+                    if ((abecedario.includes(l)) == false) {
+                        //Letra fuera del Abecedario
+                        textoError.innerHTML = `<font color="red"> <p id="error" >No puedes usar tildes en este nivel.</p><br>`;
+                        break;
+                    }
+
+                    else {
+                        //Se añade cada letra Valida al array
+                        letrasValidas.push(l);
+                    }
+
+                }    
 
             }
-
-            //Nivel Facil o Normal
-            else {
-
-                if ((abecedario.includes(l)) == false) {
-                    //Letra fuera del Abecedario
-                    textoError.innerHTML = `<font color="red"> <p id="error" >Un caracter introducido no forma parte del abecedario.</p><br>`;
-                    break;
-                }
-
-                else {
-                    //Se añade cada letra Valida al array
-                    letrasValidas.push(l);
-                }
-
-            }    
-
         }
+
+        else {
+            //No tiene 5 caracteres el texto ingresado
+            textoError.innerHTML = `<font color="red"><p id="error">La palabra no tiene 5 letras</p><br>`;
+        }
+
     }
 
     else {
-        //No tiene 5 caracteres el texto ingresado
-        textoError.innerHTML = `<font color="red"><p id="error">No ingresaste una palabra de 5 letras.</p><br>`;
+        //No forma parte del diccionario
+        textoError.innerHTML = `<font color="red"><p id="error">Esta palabra no esta en el diccionario.</p><br>`;
     }
+
 
     if (letrasValidas.length == 5) {
         //Return si todas las letras estan Validas
@@ -168,15 +213,15 @@ function botonVolver () {
 function tutorial() {
 
     //Borro la pantalla anterior
-    let divMenu = document.getElementById("menu")
-    divMenu.innerHTML = ""
+    let divMenu = document.getElementById("menu");
+    divMenu.innerHTML = "";
 
     //Obtengo Div Juego
-    let divJuego = document.getElementById("juego")
+    let divJuego = document.getElementById("juego");
     
 
     //Boton Volver
-    botonVolver()
+    botonVolver();
 
     //Pantalla Tutorial
     divJuego.innerHTML = `<h2>Posición correcta y letra correcta:</h2> 
@@ -286,7 +331,7 @@ function respuestasColoridas(respuesta, ingreso, intentos, palabra) {
 
 
        //Boton Volver
-        botonVolver()
+        botonVolver();
 
     }
 
@@ -317,7 +362,7 @@ function jugar(nivel) {
         divJuego.innerHTML = `<h1>Word-World</h1>
         <p>Bienvenido al nivel fácil.</p>
         <p>Deberías adivinar sin ningun problema...</p><br>
-        <input type="text" placeholder="Escriba su respuesta" id="input" size=22>
+        <input type="text" placeholder="Escriba su respuesta" id="input" size="22" maxlength="5">
         <button type="button" id="btn-enviar">Enviar</button>
         <p id="error"></p><br>
         <div id="res-1"></div><br>
@@ -333,7 +378,7 @@ function jugar(nivel) {
         divJuego.innerHTML = `<h1>Word-World</h1>
         <p>Bienvenido al nivel normal.</p>
         <p>Este es un desafío respetable!</p><br>
-        <input type="text" placeholder="Escriba su respuesta" id="input" size=22>
+        <input type="text" placeholder="Escriba su respuesta" id="input" size="22" maxlength="5">
         <button type="button" id="btn-enviar">Enviar</button>
         <p id="error"></p><br>
         <div id="res-1"></div><br>
@@ -349,7 +394,7 @@ function jugar(nivel) {
         divJuego.innerHTML =`<h1>Word-World</h1>
         <p>Bienvenido al nivel dificil!</p>
         <p>En este nivel tu palabra puede tener acentos, ¡Suerte!</p><br>
-        <input type="text" placeholder="Escriba su respuesta" id="input" size=22>
+        <input type="text" placeholder="Escriba su respuesta" id="input" size="22" maxlength="5">
         <button type="button" id="btn-enviar">Enviar</button>
         <p id="error"></p><br>
         <div id="res-1"></div><br>
@@ -365,16 +410,23 @@ function jugar(nivel) {
     let intentos = 0;
     botonEnviar = document.getElementById("btn-enviar");
     botonEnviar.addEventListener("click", () => {
-        ingreso = document.getElementById("input").value;
-        respuesta = corroborarAciertos(corroborarPalabra(ingreso.toLowerCase(), nivel), palabra);
-        intentos = respuestasColoridas(respuesta, ingreso.toLowerCase(), intentos, palabra);
-        });
 
-    
+        //Obtengo informacion de la palabra en la API del diccionario
+        ingreso = document.getElementById("input").value;
+        apiPromise = apiDic(ingreso.toLowerCase(), palabraDic);
+
+        //setTimeout para que cargue la API y todo se ejecute de manera correcta
+        setTimeout(function timeout() {
+            respuesta = corroborarAciertos(corroborarPalabra(ingreso.toLowerCase(), nivel, palabraDic), palabra);
+            intentos = respuestasColoridas(respuesta, ingreso.toLowerCase(), intentos, palabra);
+        }, 250 );
+
+     });
 }
 
 
-//Menu en HTML
+
+//Menu en HTML 
 function menuVisual() {
     //Obtengo los datos de localStorage para mostrar en pantalla
     let jugadasGuardadas = JSON.parse(localStorage.getItem("jugadasGuardadas"));
@@ -413,10 +465,10 @@ function menuFuncional() {
         jugar("normal");
         });
     botones[2].addEventListener("click", () => {
-        jugar("dificil")
+        jugar("dificil");
         });
     botones[3].addEventListener("click", () => {
-        tutorial()
+        tutorial();
         });
     
 
