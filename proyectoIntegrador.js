@@ -3,7 +3,7 @@ const abecedario = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", 
 "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
 //Array para palabras dentro de la API DIC
-palabraDic = []
+let palabraDic = [];
 
 //Funcion API 
 const apiDic = async (palabra, palabraDic) => {
@@ -13,8 +13,10 @@ const apiDic = async (palabra, palabraDic) => {
     fetch(`https://www.dictionaryapi.com/api/v3/references/spanish/json/${palabra}?key=d56352af-43d9-4103-8d34-eb838adb8fa9`);
     const data = await resp.json();
 
+    let respuesta = "";
+
     //Obtengo solo la palabra
-    if (data[30] == undefined) {
+    if (data[30] === undefined) {
         respuesta = data[0].hwi.hw;
     }
 
@@ -102,7 +104,7 @@ function corroborarPalabra(ingresoUsuario, nivel, palabraDic) {
     //Corroborar si palabra dentro de diccionario
     if (palabraDic.includes(ingresoUsuario) || palabrasFacil.includes(ingresoUsuario) || palabrasNormal.includes(ingresoUsuario) || palabrasDificil.includes(ingresoUsuario)) {
         //Iteracion por letra y PUSH
-        if (ingresoUsuario.length == 5) {
+        if (ingresoUsuario.length === 5) {
             for (l of ingresoUsuario) {
 
                 //Nivel Dificil con Acentos
@@ -115,7 +117,7 @@ function corroborarPalabra(ingresoUsuario, nivel, palabraDic) {
                 //Nivel Facil o Normal
                 else {
 
-                    if ((abecedario.includes(l)) == false) {
+                    if ((abecedario.includes(l)) === false) {
                         //Letra fuera del Abecedario
                         textoError.innerHTML = `<font color="red"> <p id="error" >No puedes usar tildes en este nivel.</p><br>`;
                         break;
@@ -164,7 +166,7 @@ function corroborarAciertos(ingresoCorroborado, palabra) {
         //Bucle de Aciertos
         ingresoCorroborado.forEach( (letra) => {
 
-            if (letra == palabra[indice]) {
+            if (letra === palabra[indice]) {
                 respuesta.push("Green");
             }
 
@@ -276,7 +278,7 @@ function respuestasColoridas(respuesta, ingreso, intentos, palabra) {
 
     }
     //Resultado Perder o Ganar
-    if (ingreso == palabra || intentos == 6) {
+    if (ingreso === palabra || intentos === 6) {
 
         //Elimino input y boton
         let divJuego = document.getElementById("juego");
@@ -286,7 +288,7 @@ function respuestasColoridas(respuesta, ingreso, intentos, palabra) {
         divJuego.removeChild(input);
         let textoTerminado = document.getElementById("error"); 
 
-        if (ingreso == palabra) {
+        if (ingreso === palabra) {
             //Sumo una Ganada
             agregarAlocalStorage ("ganar")
             textoTerminado.innerHTML = `<h1>¡Felicidades! <i>${palabra.toUpperCase()}</i> era la palabra ganadora!</h1>
@@ -310,7 +312,7 @@ function respuestasColoridas(respuesta, ingreso, intentos, palabra) {
             })
         }
 
-        else if (intentos == 6) {
+        else if (intentos === 6) {
             //Sumo una Perdida
             agregarAlocalStorage("perder")
             textoTerminado.innerHTML = `<h1>¡Perdiste! <i>${palabra.toUpperCase()}</i> era la palabra ganadora! </h1>`;
@@ -357,7 +359,7 @@ function jugar(nivel) {
     let palabra = "";
     
     //Visual Segun Nivel
-    if (nivel == "facil") {
+    if (nivel === "facil") {
         palabra = palabrasFacil[Math.floor(aleatorio * palabrasFacil.length)];
         divJuego.innerHTML = `<h1>Word-World</h1>
         <p>Bienvenido al nivel fácil.</p>
@@ -373,7 +375,7 @@ function jugar(nivel) {
         <div id="res-6"></div>`;
     }
 
-    else if (nivel == "normal") {
+    else if (nivel === "normal") {
         palabra = palabrasNormal[Math.floor(aleatorio * palabrasNormal.length)];
         divJuego.innerHTML = `<h1>Word-World</h1>
         <p>Bienvenido al nivel normal.</p>
@@ -412,14 +414,14 @@ function jugar(nivel) {
     botonEnviar.addEventListener("click", () => {
 
         //Obtengo informacion de la palabra en la API del diccionario
-        ingreso = document.getElementById("input").value;
-        apiPromise = apiDic(ingreso.toLowerCase(), palabraDic);
+        let ingreso = document.getElementById("input").value;
+        apiDic(ingreso.toLowerCase(), palabraDic);
 
         //setTimeout para que cargue la API y todo se ejecute de manera correcta
         setTimeout(function timeout() {
             respuesta = corroborarAciertos(corroborarPalabra(ingreso.toLowerCase(), nivel, palabraDic), palabra);
             intentos = respuestasColoridas(respuesta, ingreso.toLowerCase(), intentos, palabra);
-        }, 250 );
+        }, 500 );
 
      });
 }
